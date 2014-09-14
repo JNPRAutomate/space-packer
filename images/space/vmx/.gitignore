@@ -1,0 +1,9 @@
+# Ignore VMware files in this directory
+*.ova
+*.vmx
+*.vmdk
+*.vmsd
+*.vmxf
+*.lck
+# Except this file
+!.gitignore

@@ -1,0 +1,12 @@
+cache:
+  directories:
+    - $PWD/packer
+
+before_script: export PATH=$PATH:$PWD/packer
+
+script: './tests.sh'
+
+notifications:
+  email:
+    on_success: never
+    on_failure: never
