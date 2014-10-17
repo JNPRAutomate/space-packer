@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-DOWNLOAD_DIR=images/space/download
-OVA_DIR=images/space/fixedova
-FIXES_DIR=fixes
-VMX_DIR=images/space/vmx
+DOWNLOADDIR=images/download
+OVADIR=images/fixedova
+FIXESDIR=fixes
+VMXDIR=images/vmx
 # OSX OVFTOOL is in /Applications/VMware\ OVF\ Tool/ovftool
 # ... or another /Applications folder inside VMware Fusion
 #
@@ -16,8 +16,8 @@ VDISKMANAGER=vmware-vdiskmanager
 VDM_FLAGS="-c -a lsilogic -s 100GB -t0"
 # --lax is needed for 8,192MB source VM import
 OVFTOOL_FLAGS="--overwrite --acceptAllEulas --lax"
-OVA_PREFIX=space-
-VERSIONS="13.3R2.6
+OVAPREFIX=space-
+VERSIONS="13.3R4.4
 "
 
 for v in $VERSIONS
@@ -27,16 +27,16 @@ do
     then
         echo -e "\n\n\033[32mProcessing $v:\033[0m";
         echo -e "\n\033[32mOpening $v:\033[0m";
-        tar xvf $DOWNLOAD_DIR/$OVA_PREFIX$v.ova -C $OVA_DIR/$v;
+        tar xvf $DOWNLOADDIR/$OVAPREFIX$v.ova -C $OVADIR/$v;
         echo -e "\n\033[32m[vmware-vmx]: Creating thin-provisioned 100GB disk for $v:\033[0m";
-        $VDISKMANAGER $VDM_FLAGS $VMX_DIR/$v/$v-disk2.vmdk;
-        # echo -e "\n\033[32mPatching $v ovf:\033[0m";
-        # cp $FIXES_DIR/$OVA_PREFIX$v* $OVA_DIR/$v;
+        $VDISKMANAGER $VDM_FLAGS $VMXDIR/$v/$v-disk2.vmdk;
+        echo -e "\n\033[32mPatching $v ovf:\033[0m";
+        cp -iv $FIXESDIR/$v.vmx $OVADIR/$v/;
         echo -e "\n\033[32m[vmware-vmx]: ovftool install .VMX: $VMXDIR/$v:\033[0m";
-        $OVFTOOL $OVFTOOL_FLAGS $OVA_DIR/$v/$OVA_PREFIX$v.ovf $VMX_DIR/$v/$OVF_PREFIX$v.vmx;
+        $OVFTOOL $OVFTOOL_FLAGS $OVADIR/$v/$OVAPREFIX$v.ovf $VMXDIR/$v/$OVFPREFIX$v.vmx;
         echo -e "\n\033[32m[vmware-vmx]: patching .VMX for second disk $v:\033[0m";
-        cp -v $FIXES_DIR/$v.vmx $VMX_DIR/$v/;
-        # echo -e "\n\033[32m[virtualbox-ovf]: ovftool repackage to .OVA: $v:\033[0m";
-        # $OVFTOOL $OVFTOOL_FLAGS $OVA_DIR/$v/$OVA_PREFIX$v.ovf $OVA_DIR/$OVA_PREFIX$v.ova;
+        cp -v $FIXESDIR/$v.vmx $VMXDIR/$v/;
+        echo -e "\n\033[32m[virtualbox-ovf]: Re-packaging .OVA $v:\033[0m";
+        $OVFTOOL $OVFTOOL_FLAGS $OVADIR/$v/$OVAPREFIX$v.ovf $OVA_DIR/$OVA_PREFIX$v.ova;
     fi
 done
