@@ -1,7 +1,7 @@
 {
   "variables": {
     "chef_version": "provisionerless",
-    "space_version": "14.4R1.9",
+    "space_version": "14.1R1.9",
     "space_compliant_root_password": "packer.rocks.thanks,mitchellh",
     "space_ip_address": "172.16.211.100",
     "space_subnet_mask": "255.255.255.0",
