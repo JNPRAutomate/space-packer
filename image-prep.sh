@@ -31,10 +31,10 @@ do
         tar xvf $DOWNLOADDIR/$OVAPREFIX-$v.ova -C $OVADIR/$v;
         echo -e "\n\033[32m[vmware-vmx]: Creating thin-provisioned 100GB disk for $v:\033[0m";
         $VDISKMANAGER $VDM_FLAGS $VMXDIR/$v/$OVAPREFIX-$v-disk2.vmdk;
-        echo -e "\n\033[32mPatching $v ovf:\033[0m";
-        cp -v $FIXESDIR/$OVAPREFIX-$v.vmx $OVADIR/$v/;
         echo -e "\n\033[32m[vmware-vmx]: ovftool install .VMX: $VMXDIR/$v:\033[0m";
         $OVFTOOL $OVFTOOL_FLAGS $OVADIR/$v/$OVAPREFIX-$v.ovf $VMXDIR/$v/$OVAPREFIX-$v.vmx;
+        echo -e "\n\033[32mPatching $v .VMX:\033[0m";
+        cp -v $FIXESDIR/$OVAPREFIX-$v.vmx $VMXDIR/$v/;
         # echo -e "\n\033[32m[virtualbox-ovf]: Re-packaging .OVA $v:\033[0m";
         # $OVFTOOL $OVFTOOL_FLAGS $OVADIR/$v/$OVAPREFIX-$v.ovf $OVADIR/$OVAPREFIX-$v.ova;
     fi
